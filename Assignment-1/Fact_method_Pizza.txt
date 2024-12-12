@@ -1,0 +1,108 @@
+ChicagoStyleCheesePizza.java
+public class ChicagoStyleCheesePizza implements Pizza {
+	public void createPizza(){
+		System.out.println("ChicagoStyleCheesePizza createPizza method");
+	}
+	public void orderPizza(){
+		System.out.println("ChicagoStyleCheesePizza orderPizza method");
+	}
+	public void prepare(){
+		System.out.println("ChicagoStyleCheesePizza prepare method");
+	}
+	public void bake(){
+		System.out.println("ChicagoStyleCheesePizza prepare method");
+	}
+	public void cut(){
+		System.out.println("ChicagoStyleCheesePizza prepare method");
+	}
+	public  void box(){
+		System.out.println("ChicagoStyleCheesePizza prepare method");
+	}		
+}
+
+FactoryMethod.java
+import java.util.*;
+public class FactoryMethod{
+     static boolean b = true;
+	public static void main(String args[]){
+		Scanner sc=new Scanner(System.in);
+		PizzaFactory pf=new PizzaFactory();
+do{System.out.println("Please Enter type of pizza you want:\n 1.NyStyleCheesePizza \n 2.ChicagoStyleCheesePizza \n3.Exit");
+		int val =sc.nextInt();
+		if(val==1){
+			Pizza pizza=pf.getPizza("NyStyleCheesePizza");
+			pizza.createPizza();
+			pizza.orderPizza();
+			pizza.prepare();
+			pizza.bake();
+			pizza.cut();
+			pizza.box();
+		}
+		else if(val==2){
+			Pizza pizza=pf.getPizza("ChicagoStyleCheesePizza");
+			pizza.createPizza();
+			pizza.orderPizza();
+			pizza.prepare();
+			pizza.bake();
+			pizza.cut();
+			pizza.box();
+		}
+                else if(val==3)
+                {
+                    b = false;
+                 }
+		else{
+			System.out.println("Choose correct option");
+		}
+		}while(b);
+	}
+}
+
+NyStyleCheesePizza.java
+public class NyStyleCheesePizza implements Pizza {
+
+	public void createPizza(){
+		System.out.println("NyStyleCheesePizza createPizza method");
+	}
+	public void orderPizza(){
+		System.out.println("NyStyleCheesePizza createPizza method");
+	}
+	public void prepare(){
+		System.out.println("NyStyleCheesePizza createPizza method");
+	}
+	public void bake(){
+		System.out.println("NyStyleCheesePizza bake method");
+	}
+	public void cut(){
+		System.out.println("NyStyleCheesePizza cut method");
+	}
+	public  void box(){
+		System.out.println("NyStyleCheesePizza box method");
+	}	
+}
+
+Pizza.java
+interface Pizza{	
+	void createPizza();
+	void orderPizza();
+	void prepare();
+	void bake();
+	void cut();
+	void box();
+}
+
+
+PizzaFactory.java
+public class PizzaFactory{
+	public Pizza getPizza(String pizzaType){
+		if(pizzaType.equalsIgnoreCase("NyStyleCheesePizza")){
+			return new NyStyleCheesePizza();
+		}
+		else if(pizzaType.equalsIgnoreCase("ChicagoStyleCheesePizza")){
+			return new ChicagoStyleCheesePizza();
+		}   
+		else{
+			return null;
+		}
+	}
+}

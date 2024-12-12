@@ -1,0 +1,88 @@
+Cars.java
+
+interface Cars {
+	void wheels();
+	void headlights();
+	void seats();
+	void engine();
+}
+
+CarsMain.java
+
+import java.util.*;
+public class CarsMain{
+ static boolean b = true;
+public static void main(String args[]){
+		Scanner sc=new Scanner(System.in);
+		CarsMain c = new CarsMain();
+                do{
+                  System.out.println("Enter your choice:\n 1.NorthAmerica \n 2.Europe \n 3.Exit");
+		int val =sc.nextInt();
+		if(val==1){
+                        NorthAmerica cr = new NorthAmerica();	
+			cr.wheels();
+			cr.headlights();
+			cr.seats();
+			cr.engine();	
+		}
+
+		else if(val==2){
+                        Europe cr = new Europe();
+			cr.wheels();
+			cr.headlights();
+			cr.seats();
+			cr.engine();
+		}
+                else if(val==3)
+                 {
+                    b = false;
+                }
+		else{
+			System.out.println("Choose correct option");
+		}
+               }while(b);
+		
+}
+}
+
+Europe.java
+public class Europe implements Cars
+{
+   public void wheels()
+   {
+      System.out.println("Europe class wheels method");
+   }
+   public void headlights()
+   {
+      System.out.println("Europe class headlights method");
+   }
+   public void seats()
+   {
+      System.out.println("Europe class seats method");
+   }
+   public void engine()
+   {
+      System.out.println("Europe class engine method");
+   }
+}
+
+NorthAmerica.java
+public class NorthAmerica implements Cars
+{
+   public void wheels()
+   {
+      System.out.println("NorthAmerica class wheels method");
+   }
+   public void headlights()
+   {
+      System.out.println("NorthAmerica class headlights method");
+   }
+   public void seats()
+   {
+      System.out.println("NorthAmerica class seats method");
+   }
+   public void engine()
+   {
+      System.out.println("NorthAmerica class engine method");
+   }
+}
