@@ -1,0 +1,1252 @@
+main\resources\templates
+course-detail.html
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<title>Course Details</title>
+</head>
+<body>
+<div class="container">
+	<h3>Course Details</h3>
+	<hr>	
+	<a th:href="@{/courses}" 
+		class="btn btn-primary btn-sm mb-3">
+		Back to Course List
+	</a>
+	<a th:href="@{'/reviews/add?id='+${course.id}}"
+		class="btn btn-primary btn-sm mb-3">
+		Add Review
+	</a>	
+	<p class="h4 mb-4" th:text="'Course : ' + ${course.name}" />		
+	<h4 class="h4 mb-4">Course Reviews</h4>	
+	<table class="table table-bordered table-striped">
+		<thead class="thead-dark">
+			<tr>
+				<th>S.No</th>
+				<th>Rating</th>
+				<th>Description</th>
+				<th></th>
+			</tr>
+		</thead>		
+		<tbody>
+			<tr th:each="temp : ${reviews}">	
+				<td th:text="${temp.id}" />
+				<td th:text="${temp.rating}" />
+				<td th:text="${temp.description}" />
+				<td>
+					<a th:href="@{'/reviews/remove?id='+${temp.id}+'&cid='+${course.id}}">Remove Review</a>
+				</td>
+			</tr>
+		</tbody>		
+	</table>	
+	<a th:href="@{'/students'}" 
+			class="btn btn-primary btn-sm mb-3">
+			Back to Student List
+	</a>
+</div>
+</body>
+</html>
+
+
+
+
+main\resources\templates
+course-form.html
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<title>Save Course</title>
+</head>
+<body>
+	<div class="container">
+		<h3>Course Form</h3>
+		<hr>	
+		<a th:href="@{/courses}" 
+			class="btn btn-primary btn-sm mb-3">
+			Back to Course List
+		</a>		
+		<p class="h4 mb-4">Save Course</p>		
+		<form 
+			action="#" 
+			th:action="@{/courses/save}" 
+			th:object="${theCourse}" 
+			method="POST">			
+			<input 
+				type="text" 
+				th:field="*{name}" 
+				class="form-control mb-4 col-4" 
+				placeholder="Name" />				
+			<button type="submit" class="btn btn-info col-2">Save</button>			
+		</form>
+	</div>
+</body>
+</html>
+
+
+
+
+main\resources\templates
+course-list.html
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<title>Course List</title>
+</head>
+<body>
+<div class="container">
+	<h3>Course List</h3>
+	<hr>	
+	<a th:if=${id} th:href="@{'/students/'+${id}+'/addCourses'}" 
+			class="btn btn-primary btn-sm mb-3">
+			Add Courses
+	</a>	
+	<a th:href="@{'/courses/add'}" 
+			class="btn btn-primary btn-sm mb-3">
+			Add New Course
+	</a>		
+	<h4 class="h4 mb-4">Courses</h4>	
+	<table class="table table-bordered table-striped">
+		<thead class="thead-dark">
+			<tr>
+				<th>S.No</th>
+				<th>Course Name</th>
+				<th></th>
+				<th th:if="${add_id!=null||remove_id!=null}"></th>
+			</tr>
+		</thead>		
+		<tbody>
+			<tr th:each="temp : ${courses}">	
+				<td th:text="${temp.id}" />
+				<td th:text="${temp.name}" />
+				<td>
+					<a th:href="@{'/courses/'+${temp.id}}">View Course</a>
+				</td>
+				<td th:if="${add_id!=null||remove_id!=null}">
+					<a th:if="${remove_id!=null}" th:href="@{'/students/'+${remove_id}+'/removeCourse?cid='+${temp.id}}">Remove Course</a>
+					<a th:if="${add_id!=null}" th:href="@{'/students/'+${add_id}+'/addCourse?cid='+${temp.id}}">Add Course</a>
+				</td>
+			</tr>
+		</tbody>		
+	</table>	
+	<a th:href="@{'/students'}" 
+			class="btn btn-primary btn-sm mb-3">
+			Back to Student List
+	</a>
+</div>	
+</body>
+</html>
+
+
+
+
+main\resources\templates
+passport-form.html
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<title>Save Student Passport</title>
+</head>
+<body>
+	<div class="container">
+		<h3>Passport Form</h3>
+		<hr>		
+		<a th:href="@{/students}" 
+			class="btn btn-primary btn-sm mb-3">
+			Back to Student List
+		</a>		
+		<p class="h4 mb-4">Save Student Passport</p>		
+		<form 
+			action="#" 
+			th:action="@{'/passports/save?id='+${id}}" 
+			th:object="${thePassport}" 
+			method="POST">			
+			<input 
+				type="text" 
+				th:field="*{number}" 
+				class="form-control mb-4 col-4" 
+				placeholder="Passport Number" />				
+			<button type="submit" class="btn btn-info col-2">Save</button>			
+		</form>
+	</div>
+</body>
+</html>
+
+
+
+
+main\resources\templates
+review-form.html
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<title>Save Review</title>
+</head>
+<body>
+	<div class="container">
+		<h3>Review Form</h3>
+		<hr>		
+		<a th:href="@{/courses}" 
+			class="btn btn-primary btn-sm mb-3">
+			Back to Course List
+		</a>		
+		<p class="h4 mb-4">Save Review</p>		
+		<form 
+			action="#" 
+			th:action="@{'/reviews/save?id='+${id}}" 
+			th:object="${theReview}" 
+			method="POST">			
+			<input 
+				type="text" 
+				th:field="*{rating}" 
+				class="form-control mb-4 col-4" 
+				placeholder="Rating" />				
+			<input 
+				type="text" 
+				th:field="*{description}" 
+				class="form-control mb-4 col-4" 
+				placeholder="Description" />				
+			<button type="submit" class="btn btn-info col-2">Save</button>			
+		</form>
+	</div>
+</body>
+</html>
+
+
+
+
+main\resources\templates
+student-form.html
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<title>Save Student</title>
+</head>
+<body>
+	<div class="container">
+		<h3>Student Form</h3>
+		<hr>		
+		<a th:href="@{/students}" 
+			class="btn btn-primary btn-sm mb-3">
+			Back to Student List
+		</a>		
+		<p class="h4 mb-4">Save Student</p>
+		<form 
+			action="#" 
+			th:action="@{/students/save}" 
+			th:object="${theStudent}" 
+			method="POST">
+			<input 
+				type="text" 
+				th:field="*{name}" 
+				class="form-control mb-4 col-4" 
+				placeholder="Name" />				
+			<button type="submit" class="btn btn-info col-2">Save</button>			
+		</form>
+	</div>
+</body>
+</html>
+
+
+
+
+main\resources\templates
+student-list.html
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<title>Student List</title>
+</head>
+<body>
+<div class="container">
+	<h3>Student List</h3>
+	<hr>	
+	<a th:href="@{/courses}" 
+			class="btn btn-primary btn-sm mb-3">
+			View All Courses
+	</a>		
+	<p class="h4 mb-4">Students</p>	
+	<table class="table table-bordered table-striped">
+		<thead class="thead-dark">
+			<tr>
+				<th>Id</th>
+				<th>Student Name</th>
+				<th>Passport</th>
+				<th>Courses</th>
+			</tr>
+		</thead>		
+		<tbody>
+			<tr th:each="temp : ${students}">	
+				<td th:text="${temp.id}" />
+				<td th:text="${temp.name}" />
+				<td>
+					<p th:if="${temp.passport}" th:text="${temp.passport.number}" />
+					<a th:if="!${temp.passport}" th:href="@{'/passports/add?id='+${temp.id}}">Add Passport</a>
+				<td>
+					<a th:href="@{'/students/'+${temp.id}+'/courses'}">
+						<p th:if="${temp.courses.isEmpty()}">Add Courses</p>
+						<p th:if="!${temp.courses.isEmpty()}">View Courses</p>
+					</a>
+					
+				</td>
+			</tr>
+		</tbody>		
+	</table>	
+	<a th:href="@{/students/add}" 
+			class="btn btn-primary btn-sm mb-3">
+			Add new Student
+	</a>
+</div>
+</body>
+</html>
+
+
+
+
+studentdbms
+StudentDBMSApplication.java
+
+package studentdbms;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import studentdbms.entity.Course;
+import studentdbms.entity.Student;
+import studentdbms.service.CourseService;
+import studentdbms.service.StudentService;
+
+@SpringBootApplication
+public class StudentDBMSApplication implements CommandLineRunner
+{
+	@Autowired
+	private StudentService studentService;
+	
+	@Autowired
+	private CourseService courseService;
+	
+	public static void main(String[] args) {
+		SpringApplication.run(StudentDBMSApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception 
+	{
+		Student student = new Student("Aditya");
+		studentService.save(student);
+		Course course = new Course("Spring Boot");
+		courseService.save(course);
+		student.addCourse(course);
+		studentService.save(student);
+		course.addStudent(student);
+		courseService.save(course);
+	}
+
+}
+
+
+
+
+studentdbms.controller
+CourseController.java
+
+package studentdbms.controller;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import studentdbms.entity.Course;
+import studentdbms.entity.Review;
+import studentdbms.service.CourseService;
+
+@Controller
+@RequestMapping("/courses")
+public class CourseController 
+{
+	@Autowired
+	private CourseService courseService;
+	
+	@GetMapping("")
+	public String findAll(Model model)
+	{
+		List<Course> courses = courseService.findAll();
+		model.addAttribute("courses", courses);
+		return "course-list";
+	}
+	
+	@GetMapping("/{id}")
+	public String findById(@PathVariable("id") int id, Model model) 
+	{
+		Course course = courseService.findById(id);
+		model.addAttribute("course", course);
+		List<Review> reviews = course.getReviews();
+		model.addAttribute("reviews", reviews);
+		return "course-detail";
+	}
+	
+	@GetMapping("/add")
+	public String add(Model model)
+	{
+		Course theCourse = new Course();
+		model.addAttribute("theCourse", theCourse);
+		return "course-form";
+	}
+	
+	@PostMapping("/save")
+	public String save(@ModelAttribute("theCourse") Course theCourse)
+	{
+		courseService.save(theCourse);
+		return "redirect:/courses";
+	}
+	
+}
+
+
+
+
+studentdbms.controller
+PassportController.java
+
+package studentdbms.controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import studentdbms.entity.Passport;
+import studentdbms.entity.Student;
+import studentdbms.service.PassportService;
+import studentdbms.service.StudentService;
+
+@Controller
+@RequestMapping("/passports")
+public class PassportController 
+{
+	@Autowired
+	private StudentService studentService;
+	
+	@Autowired
+	private PassportService passportService;
+	
+	@GetMapping("/add")
+	public String add(Model model, @RequestParam("id") int id)
+	{
+		Passport thePassport = new Passport();
+		model.addAttribute("thePassport", thePassport);
+		model.addAttribute("id", id);
+		return "passport-form";
+	}
+	
+	@PostMapping("/save")
+	public String save(@RequestParam("id") int id, @ModelAttribute("thePassport") Passport thePassport)
+	{
+		Student student = studentService.findById(id);
+		thePassport.setStudent(student);
+		passportService.save(thePassport);
+		student.setPassport(thePassport);
+		studentService.save(student);
+		return "redirect:/students";
+	}
+	
+}
+
+
+
+
+studentdbms.controller
+ReviewController.java
+
+package studentdbms.controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import studentdbms.entity.Course;
+import studentdbms.entity.Review;
+import studentdbms.service.CourseService;
+import studentdbms.service.ReviewService;
+
+@Controller
+@RequestMapping("/reviews")
+public class ReviewController 
+{
+	@Autowired
+	private ReviewService reviewService;
+	
+	@Autowired
+	private CourseService courseService;
+	
+	@GetMapping("/add")
+	public String add(Model model, @RequestParam("id") int id)
+	{
+		Review theReview = new Review();
+		model.addAttribute("theReview", theReview);
+		model.addAttribute("id", id);
+		return "review-form";
+	}
+	
+	@PostMapping("/save")
+	public String save(@ModelAttribute("theReview") Review theReview, @RequestParam("id") int id)
+	{
+		Course course = courseService.findById(id);
+		theReview.setCourse(course);
+		reviewService.save(theReview);
+		course.addReview(theReview);
+		courseService.save(course);
+		return "redirect:/courses/"+id;
+	}
+	
+	@GetMapping("/remove")
+	public String remove(@RequestParam("id") int id, @RequestParam("cid") int cid)
+	{
+		Course course = courseService.findById(cid);
+		Review review = reviewService.findById(id);
+		course.removeReview(review);
+		courseService.save(course);
+		reviewService.remove(review);
+		return "redirect:/courses/"+cid;
+	}
+}
+
+
+
+
+studentdbms.controller
+StudentController.java
+
+package studentdbms.controller;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import studentdbms.entity.Course;
+import studentdbms.entity.Student;
+import studentdbms.service.CourseService;
+import studentdbms.service.StudentService;
+@Controller
+@RequestMapping("/students")
+public class StudentController 
+{
+	@Autowired
+	private StudentService studentService;
+	
+	@Autowired
+	private CourseService courseService;
+	
+	@GetMapping("")
+	public String findAll(Model model)
+	{
+		List<Student> students = studentService.findAll();
+		model.addAttribute("students", students);
+		return "student-list";
+	}
+	
+	@GetMapping("/add")
+	public String add(Model model)
+	{
+		Student theStudent = new Student();
+		model.addAttribute("theStudent", theStudent);
+		return "student-form";
+	}
+	
+	@PostMapping("/save")
+	public String save(@ModelAttribute("theStudent") Student theStudent)
+	{
+		studentService.save(theStudent);
+		return "redirect:/students";
+	}
+	
+	@GetMapping("/{id}/courses")
+	public String viewCourses(@PathVariable("id") int id, Model model)
+	{
+		Student student = studentService.findById(id);
+		List<Course> courses = student.getCourses();
+		if(courses.isEmpty()) {
+			return "redirect:/students/" + id + "/addCourses";
+		}
+		model.addAttribute("remove_id", id);
+		model.addAttribute("courses", courses);
+		return "course-list";
+	}
+	
+	@GetMapping("/{id}/addCourses")
+	public String addCourses(@PathVariable("id") int id, Model model)
+	{
+		List<Course> studentCourses = studentService.findById(id).getCourses();
+		List<Course> courses = courseService.findAll();
+		List<Course> remainingCourses = new ArrayList<Course>();
+		for(Course c: courses)
+		{
+			if(!studentCourses.contains(c)) {
+				remainingCourses.add(c);
+			}
+		}
+		model.addAttribute("courses", remainingCourses);
+		model.addAttribute("add_id", id);
+		return "course-list";
+	}
+	
+	@GetMapping("/{sid}/addCourse")
+	public String addCourse(@PathVariable("sid") int sid, @RequestParam("cid") int cid)
+	{
+		Student student = studentService.findById(sid);
+		Course course = courseService.findById(cid);
+		student.addCourse(course);
+		studentService.save(student);
+		course.addStudent(student);
+		courseService.save(course);
+		return "redirect:/students/"+sid+"/courses";
+	}
+	
+	@GetMapping("/{sid}/removeCourse")
+	public String removeCourse(@PathVariable("sid") int sid, @RequestParam("cid") int cid)
+	{
+		Student student = studentService.findById(sid);
+		Course course = courseService.findById(cid);
+		student.removeCourse(course);
+		studentService.save(student);
+		course.removeStudent(student);
+		courseService.save(course);
+		return "redirect:/students/"+sid+"/courses";
+	}
+}
+
+
+
+
+studentdbms.entity
+Course.java
+
+package studentdbms.entity;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+@Entity
+public class Course 
+{
+	@Id
+	@GeneratedValue
+	private int id;
+	
+	@Column(unique = true)
+	private String name;
+	
+	@OneToMany(mappedBy = "course")
+	@JsonIgnore
+	private List<Review> reviews = new ArrayList<>();
+	
+	@ManyToMany(mappedBy = "courses")
+	@JsonIgnore
+	private List<Student> students = new ArrayList<>();
+	
+	public Course() {}
+
+	public Course(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void addReview(Review review) {
+		this.reviews.add(review);
+	}
+	
+	public void removeReview(Review review) {
+		this.reviews.remove(review);
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void addStudent(Student student) {
+		this.students.add(student);
+	}
+	
+	public void removeStudent(Student student) {
+		this.students.remove(student);
+	}
+
+	@Override
+	public String toString() {
+		return "Course [id=" + id + ", name=" + name + "]";
+	}
+	
+}
+
+
+
+
+studentdbms.entity
+Passport.java
+
+package studentdbms.entity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+@Entity
+public class Passport 
+{
+	@Id
+	@GeneratedValue
+	private int id;
+	
+	@Column(nullable = false, unique = true)
+	private String number;
+	
+	@OneToOne(mappedBy = "passport")
+	private Student student;
+	
+	public Passport() {}
+
+	public Passport(String number) {
+		this.number = number;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+	@Override
+	public String toString() {
+		return "Passport [id=" + id + ", number=" + number + "]";
+	}
+	
+}
+
+
+
+
+studentdbms.entity
+Review.java
+
+package studentdbms.entity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+@Entity
+public class Review 
+{
+	@Id
+	@GeneratedValue
+	private int id;
+	
+	@Column(nullable = false)
+	private String rating;
+
+	@Column(nullable = false)
+	private String description;
+	
+	@ManyToOne
+	private Course course;
+
+	public Review() {}
+	
+	public Review(String rating, String description) {
+		this.rating = rating;
+		this.description = description;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getRating() {
+		return rating;
+	}
+
+	public void setRating(String rating) {
+		this.rating = rating;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
+	}
+
+	@Override
+	public String toString() {
+		return "Review [id=" + id + ", rating=" + rating + ", description=" + description + ", course=" + course + "]";
+	}
+
+}
+
+
+
+
+studentdbms.entity
+Student.java
+
+package studentdbms.entity;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+@Entity
+public class Student 
+{
+	@Id
+	@GeneratedValue
+	private int id;
+	
+	@Column
+	private String name;
+	
+	@OneToOne
+	private Passport passport;
+	
+	@ManyToMany
+	@JoinTable(name = "STUDENT_COURSE", 
+		joinColumns = @JoinColumn(name="STUDENT_ID"), 
+		inverseJoinColumns = @JoinColumn(name = "COURSE_ID"))
+	private List<Course> courses = new ArrayList<>();
+
+	public Student() {}
+
+	public Student(String name) {
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Passport getPassport() {
+		return passport;
+	}
+
+	public void setPassport(Passport passport) {
+		this.passport = passport;
+	}
+
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void addCourse(Course course) {
+		this.courses.add(course);
+	}
+	
+	public void removeCourse(Course course) {
+		this.courses.remove(course);
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", name=" + name + "]";
+	}
+}
+
+
+
+
+studentdbms.repository
+CourseRepository.java
+
+package studentdbms.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import studentdbms.entity.Course;
+@Repository
+public interface CourseRepository extends JpaRepository<Course, Integer>
+{
+	
+}
+
+
+
+
+
+studentdbms.repository
+PassportRepository.java
+
+package studentdbms.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import studentdbms.entity.Passport;
+@Repository
+public interface PassportRepository extends JpaRepository<Passport, Integer>
+{
+
+}
+
+
+
+
+studentdbms.repository
+ReviewRepository.java
+
+package studentdbms.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import studentdbms.entity.Review;
+@Repository
+public interface ReviewRepository extends JpaRepository<Review, Integer>
+{
+
+}
+
+
+
+
+studentdbms.repository
+StudentRepository.java
+
+package studentdbms.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import studentdbms.entity.Student;
+@Repository
+public interface StudentRepository extends JpaRepository<Student, Integer>
+{
+}
+
+
+
+
+studentdbms.service
+CourseService.java
+
+package studentdbms.service;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import studentdbms.entity.Course;
+import studentdbms.repository.CourseRepository;
+@Service
+public class CourseService 
+{
+	@Autowired
+	private CourseRepository courseRepository;
+	
+	public List<Course> findAll() {
+		return courseRepository.findAll();
+	}
+	
+	public Course findById(int id) {
+		return courseRepository.findById(id).get();
+	}
+	
+	@Transactional
+	public Course save(Course course) {
+		return courseRepository.save(course);
+	}
+}
+
+
+
+
+
+studentdbms.service
+PassportService.java
+
+package studentdbms.service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import studentdbms.entity.Passport;
+import studentdbms.repository.PassportRepository;
+@Service
+public class PassportService 
+{
+	@Autowired
+	private PassportRepository passportRepository;
+	
+	@Transactional
+	public Passport save(Passport passport) {
+		return passportRepository.save(passport);
+	}
+}
+
+
+
+
+studentdbms.service
+ReviewService.java
+
+package studentdbms.service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import studentdbms.entity.Review;
+import studentdbms.repository.ReviewRepository;
+@Service
+public class ReviewService 
+{
+	@Autowired
+	private ReviewRepository reviewRepository;
+	
+	public Review findById(int id) {
+		return reviewRepository.findById(id).get();
+	}
+	
+	@Transactional
+	public Review save(Review review) {
+		return reviewRepository.save(review);
+	}
+	
+	@Transactional
+	public void remove(Review review) {
+		reviewRepository.delete(review);
+	}
+}
+
+
+
+
+studentdbms.service
+StudentService.java
+
+package studentdbms.service;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import studentdbms.entity.Student;
+import studentdbms.repository.StudentRepository;
+@Service
+public class StudentService
+{
+	@Autowired
+	private StudentRepository studentRepository;
+	
+	public List<Student> findAll() {
+		return studentRepository.findAll();
+	}
+	
+	public Student findById(int id) {
+		return studentRepository.findById(id).get();
+	}
+	
+	@Transactional
+	public Student save(Student student) {
+		return studentRepository.save(student);
+	}
+}
+
+
+
+
+application.properties
+spring.h2.console.enabled=true
+spring.datasource.url=jdbc:h2:mem:testdb
+
+
+
+
+pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.3.0.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>StudentDBMS</groupId>
+	<artifactId>StudentDBMS</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>StudentDBMS</name>
+	<description>StudentDBMS</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+

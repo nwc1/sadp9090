@@ -1,0 +1,459 @@
+com.taskmanager
+TaskManagerApplication.java
+
+package com.taskmanager;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+@SpringBootApplication
+public class TaskManagerApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(TaskManagerApplication.class, args);
+	}
+}
+
+
+
+
+
+com.taskmanager.controller
+CategoryController.java
+
+package com.taskmanager.controller;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.taskmanager.Entity.Category;
+import com.taskmanager.service.CategoryService;
+@RestController
+@RequestMapping("/api/categories")
+public class CategoryController {
+    @Autowired
+    private CategoryService categoryService;
+    @GetMapping
+    public List<Category> getAllCategories() {
+        return categoryService.getAllCategories();
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
+        Optional<Category> category = categoryService.getCategoryById(id);
+        if (category.isPresent()) {
+            return ResponseEntity.ok(category.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @PostMapping
+    public Category createCategory(@RequestBody Category category) {
+        return categoryService.createCategory(category);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+
+
+
+
+com.taskmanager.controller
+TaskController.java
+
+package com.taskmanager.controller;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.taskmanager.Entity.Task;
+import com.taskmanager.service.TaskService;
+@RestController
+@RequestMapping("/api/tasks")
+public class TaskController {
+    @Autowired
+    private TaskService taskService;
+    @GetMapping
+    public List<Task> getAllTasks() {
+        return taskService.getAllTasks();
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        Optional<Task> task = taskService.getTaskById(id);
+        if (task.isPresent()) {
+            return ResponseEntity.ok(task.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @PostMapping
+    public Task createTask(@RequestBody Task task) {
+        return taskService.createTask(task);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+        Task updatedTask = taskService.updateTask(id, task);
+        if (updatedTask != null) {
+            return ResponseEntity.ok(updatedTask);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/category/{categoryId}")
+    public List<Task> getTasksByCategory(@PathVariable Long categoryId) {
+        return taskService.getTasksByCategory(categoryId);
+    }
+    @GetMapping("/overdue")
+    public List<Task> getOverdueTasks() {
+        return taskService.getOverdueTasks(LocalDate.now());
+    }
+}
+
+
+
+
+com.taskmanager.Entity
+Category.java
+
+package com.taskmanager.Entity;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonBackReference; // Import this
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+@Entity
+public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    @OneToMany(mappedBy = "category")
+    @JsonBackReference // Add this annotation
+    private List<Task> tasks;
+    public Category() {}
+    public Category(String name) {
+        this.name = name;
+    }
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public List<Task> getTasks() {
+        return tasks;
+    }
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+}
+
+
+
+
+com.taskmanager.Entity
+Task.java
+
+package com.taskmanager.Entity;
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonManagedReference; // Import this
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+@Entity
+public class Task {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String description;
+    private LocalDate dueDate;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonManagedReference // Add this annotation
+    private Category category;
+    public Task() {}
+    public Task(String title, String description, LocalDate dueDate, Category category) {
+        this.title = title;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.category = category;
+    }
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+    public Category getCategory() {
+        return category;
+    }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+}
+
+
+
+
+com.taskmanager.repository
+CategoryRepository.java
+
+package com.taskmanager.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import com.taskmanager.Entity.Category;
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+}
+
+
+
+
+com.taskmanager.repository
+TaskRepository.java
+
+package com.taskmanager.repository;
+import java.time.LocalDate;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import com.taskmanager.Entity.Task;
+@Repository
+public interface TaskRepository extends JpaRepository<Task, Long> {
+    List<Task> findByCategoryId(Long categoryId);
+    List<Task> findByDueDateBefore(LocalDate dueDate);
+}
+
+
+
+
+com.taskmanager.service
+CategoryService.java
+
+package com.taskmanager.service;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.taskmanager.Entity.Category;
+import com.taskmanager.repository.CategoryRepository;
+@Service
+public class CategoryService {
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+    public Optional<Category> getCategoryById(Long id) {
+        return categoryRepository.findById(id);
+    }
+    public Category createCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
+    }
+}
+
+
+
+
+
+com.taskmanager.service
+TaskService.java
+
+package com.taskmanager.service;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.taskmanager.Entity.Task;
+import com.taskmanager.repository.TaskRepository;
+@Service
+public class TaskService {
+    @Autowired
+    private TaskRepository taskRepository;
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+    public Optional<Task> getTaskById(Long id) {
+        return taskRepository.findById(id);
+    }
+    public Task createTask(Task task) {
+        return taskRepository.save(task);
+    }
+    public Task updateTask(Long id, Task updatedTask) {
+        Optional<Task> existingTask = taskRepository.findById(id);
+        if (existingTask.isPresent()) {
+            Task task = existingTask.get();
+            task.setTitle(updatedTask.getTitle());
+            task.setDescription(updatedTask.getDescription());
+            task.setDueDate(updatedTask.getDueDate());
+            task.setCategory(updatedTask.getCategory());
+            return taskRepository.save(task);
+        }
+        return null;
+    }
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
+    }
+    public List<Task> getTasksByCategory(Long categoryId) {
+        return taskRepository.findByCategoryId(categoryId);
+    }
+    public List<Task> getOverdueTasks(LocalDate currentDate) {
+        return taskRepository.findByDueDateBefore(currentDate);
+    }
+}
+
+
+
+
+application.properties
+
+spring.application.name=TaskManager
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.h2.console.enabled=true
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=update
+
+
+
+
+Query
+
+INSERT INTO CATEGORY (ID, NAME)
+VALUES (1, 'Example Category');
+
+INSERT INTO TASK (ID, DESCRIPTION, DUE_DATE, TITLE, CATEGORY_ID)
+VALUES (1, 'Complete the project documentation', '2024-12-31', 'Documentation', 1);
+
+
+
+
+pom.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.taskManager</groupId>
+	<artifactId>TaskManager</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>TaskManager</name>
+	<description>Demo project for Spring Boot</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
