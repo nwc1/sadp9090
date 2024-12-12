@@ -39,4 +39,7 @@ public class LoggerService {
         System.out.println(logger1 == logger2); // true
 
         // Log some messages
-        logger1.log("
+        logger1.log("Hello, World!");
+        logger2.log("This is a log message.");
+    }
+}
