@@ -1,2 +1,0 @@
-Employee No: 201, Name: Naved, Designation: Developer, Department: IT, Salary: 520000.0
-Employee No: 202, Name: Swaroop, Designation: Java Developer, Department: CS, Salary: 430000.0
